@@ -10,14 +10,17 @@ import Foundation
 import AlamofireImage
 
 extension UIImageView {
-    func setImage(with urlString: String) {
+    func setImage(with urlString: String?) {
+        guard
+            let urlString = urlString,
+            let url = URL(string: urlString) else { return }
+        
         let spinner = UIActivityIndicatorView()
         spinner.hidesWhenStopped = true
         spinner.startAnimating()
         self.addSubview(spinner)
         spinner.center = self.center
         
-        guard let url = URL(string: urlString) else { return }
         self.af_setImage(withURL: url, imageTransition: .crossDissolve(0.2)) { _ in
             spinner.stopAnimating()
         }

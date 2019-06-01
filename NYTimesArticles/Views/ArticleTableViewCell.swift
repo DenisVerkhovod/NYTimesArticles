@@ -8,8 +8,8 @@
 
 import UIKit
 
-class ArticleTableViewCell: UITableViewCell {
-
+final class ArticleTableViewCell: UITableViewCell {
+    
     @IBOutlet weak var thumbImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var publishedLabel: UILabel!
@@ -25,19 +25,29 @@ class ArticleTableViewCell: UITableViewCell {
     func configure(with article: Article?) {
         if let article = article {
             titleLabel.text = article.title
-            publishedLabel.text = "Published date: \(article.published)"
-            if let emailed = article.emailed {
+            if let published = article.published {
+                publishedLabel.text = "Published date: \(published)"
+            }
+            if let emailed = article.emailedIntValue {
                 ratingLabel.text = "Emailed: \(emailed)"
-            } else if let shared = article.shared {
+            } else if let shared = article.sharedIntValue {
                 ratingLabel.text = "Shared: \(shared)"
-            } else if let viewed = article.viewed {
+            } else if let viewed = article.viewedIntValue {
                 ratingLabel.text = "Viewed: \(viewed)"
             }
-            thumbImageView.setImage(with: article.thumbImage)
+            
+            if let localPath = article.thumbImageLocalPath {
+                LocalStorageService.shared.image(fromFile: localPath) { [weak self] image in
+                    self?.imageView?.image = image
+                }
+            } else {
+                thumbImageView.setImage(with: article.thumbImageLink)
+            }
             spinner.stopAnimating()
         } else {
             titleLabel.text = ""
             publishedLabel.text = ""
+            ratingLabel.text = ""
             thumbImageView.image = nil
             spinner.startAnimating()
         }

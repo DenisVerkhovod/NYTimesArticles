@@ -10,12 +10,11 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-class NetworkService {
+final class NetworkService {
     
     static let shared = NetworkService()
     
     func request(url: URLConvertible, parameters: Parameters, completion: @escaping ((Result<JSON>) -> Void)) {
-
         let parameters = ([Constants.apiKey: Constants.key] as Parameters).merging(parameters) { first, _ in first }
         
         Alamofire.request(url, parameters: parameters)
@@ -31,18 +30,10 @@ class NetworkService {
         }
     }
     
-    //    func request(url: URLConvertible) {
-    //        Alamofire.request(url)
-    //            .validate()
-    //            .response { response in
-    //                guard let data = response.data else { return }
-    //                print(data)
-    //
-    ////                let feed = try? JSONDecoder().decode(Feed.self, from: data)
-    ////                print(feed)
-    //                let json = try? JSONSerialization.jsonObject(with: data, options: [])
-    //                guard let json1 = json as? [String: Any] else { return }
-    //                print(json1)
-    //        }
-    //    }
+    func downloadImage(url: URL, completion: @escaping ((UIImage?) -> Void)) {
+        Alamofire.request(url).responseImage { response in
+            let image: UIImage? = response.result.value
+            completion(image)
+        }
+    }
 }

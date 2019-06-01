@@ -11,17 +11,29 @@ import UIKit
 class BaseViewController: UIViewController {
     
     var feed: Feed!
-    var offset: Int {
-        return feed.articles.count
+    var type: FeedType {
+        return .emailed
     }
-
+    
+    var offset: Int {
+        return feed.articles?.count ?? 0
+    }
+    
     @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        feed = Feed()
+        
+        configure()
         configureTableView()
         updateFeed()
-        
+    }
+    
+    private func configure() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        title = type.titleDescription
+        feed = Feed.create(in: CoreData.stack.backgroundContext)
+        print("total article: \(feed.totalArticles)")
     }
     
     private func configureTableView() {
@@ -32,9 +44,11 @@ class BaseViewController: UIViewController {
     }
     
     private func updateFeed() {
-        FeedService.shared.update(feed: feed, by: offset, type: .viewed) { [weak self] feed, error in
-            if error != nil {
-                print("Couldn't update feed")
+        FeedService.shared.update(feed: feed, by: offset, type: type) { [weak self] feed, error in
+            if let error = error {
+                if error == .requestsLimit {
+                    self?.presentAlert(with: error.description)
+                }
                 return
             }
             self?.tableView.reloadData()
@@ -42,13 +56,20 @@ class BaseViewController: UIViewController {
     }
     
     private func isLoadingCell(at indexPath: IndexPath) -> Bool {
-        return indexPath.row >= feed.articles.count
+        return indexPath.row >= feed.articles?.count ?? 0
+    }
+    
+    private func presentAlert(with text: String) {
+        let alert = UIAlertController(title: text, message: nil, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
     }
 }
 
 extension BaseViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return feed.totalArticles
+        return feed.totalArticlesIntValue ?? 20
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -56,7 +77,7 @@ extension BaseViewController: UITableViewDataSource {
         if isLoadingCell(at: indexPath) {
             cell.configure(with: nil)
         } else {
-            let article = feed.articles[indexPath.row]
+            let article = feed.articles?.object(at: indexPath.row) as? Article
             cell.configure(with: article)
         }
         
@@ -75,5 +96,15 @@ extension BaseViewController: UITableViewDataSourcePrefetching {
 extension BaseViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100.0
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("IndexPath: \(indexPath.row)")
+        let article = feed.articles?.object(at: indexPath.row) as! Article
+        article.addToFavorite()
+//        let id = article.objectID
+//        let favoriteArticle = CoreData.stack.mainContext.object(with: id)
+        print("ADDED!")
+//        CoreData.stack.saveContext()
     }
 }
