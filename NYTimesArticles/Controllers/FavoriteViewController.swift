@@ -68,6 +68,15 @@ extension FavoriteViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
+            let article = self?.fetchResultsController.object(at: indexPath)
+            article?.delete()
+            completion(true)
+        }
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
 }
 
 // MARK: - NSFetchedResultsControllerDelegate
@@ -81,9 +90,9 @@ extension FavoriteViewController: NSFetchedResultsControllerDelegate {
         case .insert:
             tableView.insertRows(at: [newIndexPath!], with: .automatic)
         case .delete:
-            tableView.deleteRows(at: [newIndexPath!], with: .automatic)
+            tableView.deleteRows(at: [indexPath!], with: .automatic)
         case .update:
-            tableView.reloadRows(at: [newIndexPath!], with: .automatic)
+            tableView.reloadRows(at: [indexPath!], with: .automatic)
         case .move:
             tableView.moveRow(at: indexPath!, to: newIndexPath!)
         }

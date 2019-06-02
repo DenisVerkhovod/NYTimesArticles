@@ -67,6 +67,7 @@ class BaseViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDataSource
 extension BaseViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return feed.totalArticlesIntValue ?? 20
@@ -85,6 +86,7 @@ extension BaseViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDataSourcePrefetching
 extension BaseViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         if indexPaths.contains(where: isLoadingCell) {
@@ -93,18 +95,27 @@ extension BaseViewController: UITableViewDataSourcePrefetching {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension BaseViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100.0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("IndexPath: \(indexPath.row)")
-        let article = feed.articles?.object(at: indexPath.row) as! Article
+        guard let article = feed.articles?.object(at: indexPath.row) as? Article else { return }
         article.addToFavorite()
-//        let id = article.objectID
-//        let favoriteArticle = CoreData.stack.mainContext.object(with: id)
-        print("ADDED!")
-//        CoreData.stack.saveContext()
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let addToFavoriteAction = UIContextualAction(style: .normal, title: "Add To Favorite") { [weak self] _, _, completion in
+            guard let article = self?.feed.articles?.object(at: indexPath.row) as? Article else { return }
+            article.addToFavorite()
+            completion(true)
+        }
+        return UISwipeActionsConfiguration(actions: [addToFavoriteAction])
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        return []
     }
 }

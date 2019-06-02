@@ -38,7 +38,7 @@ final class ArticleTableViewCell: UITableViewCell {
             
             if let localPath = article.thumbImageLocalPath {
                 LocalStorageService.shared.image(fromFile: localPath) { [weak self] image in
-                    self?.imageView?.image = image
+                    self?.thumbImageView?.image = image
                 }
             } else {
                 thumbImageView.setImage(with: article.thumbImageLink)

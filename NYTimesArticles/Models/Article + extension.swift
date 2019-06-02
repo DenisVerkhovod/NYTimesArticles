@@ -75,6 +75,11 @@ extension Article {
         saveChanges()
     }
     
+    func delete() {
+        stack.mainContext.delete(self)
+        stack.saveContext()
+    }
+    
     func saveChanges() {
         stack.saveContext()
     }
