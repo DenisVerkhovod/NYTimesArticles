@@ -14,6 +14,7 @@ final class ArticleTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var publishedLabel: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
+    @IBOutlet weak var isFavoriteImageView: UIImageView!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     
@@ -43,12 +44,14 @@ final class ArticleTableViewCell: UITableViewCell {
             } else {
                 thumbImageView.setImage(with: article.thumbImageLink)
             }
+            isFavoriteImageView.isHidden = !article.isInFavorite()
             spinner.stopAnimating()
         } else {
             titleLabel.text = ""
             publishedLabel.text = ""
             ratingLabel.text = ""
             thumbImageView.image = nil
+            isFavoriteImageView.isHidden = true
             spinner.startAnimating()
         }
     }

@@ -151,11 +151,19 @@
                                     <outlet property="delegate" destination="h6u-GM-3iO" id="PoE-A0-nK4"/>
                                 </connections>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add article to favorite to see it here..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xcj-0S-zMy">
+                                <rect key="frame" x="46.5" y="74" width="282" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="Xcj-0S-zMy" firstAttribute="centerX" secondItem="rA2-N8-h4f" secondAttribute="centerX" id="1QI-GG-OYc"/>
                             <constraint firstItem="PaE-dC-XAg" firstAttribute="trailing" secondItem="tQS-D9-J4h" secondAttribute="trailing" id="7oY-PB-rVY"/>
                             <constraint firstItem="PaE-dC-XAg" firstAttribute="bottom" secondItem="tQS-D9-J4h" secondAttribute="bottom" id="A0U-HT-ohT"/>
+                            <constraint firstItem="Xcj-0S-zMy" firstAttribute="top" secondItem="PaE-dC-XAg" secondAttribute="top" constant="10" id="jcX-bI-eWI"/>
                             <constraint firstItem="tQS-D9-J4h" firstAttribute="top" secondItem="PaE-dC-XAg" secondAttribute="top" id="yBn-4O-hNE"/>
                             <constraint firstItem="tQS-D9-J4h" firstAttribute="leading" secondItem="PaE-dC-XAg" secondAttribute="leading" id="yWx-Y7-fdu"/>
                         </constraints>
@@ -163,6 +171,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="hun-qP-cwE"/>
                     <connections>
+                        <outlet property="emptyTableLabel" destination="Xcj-0S-zMy" id="tmT-g0-Hab"/>
                         <outlet property="tableView" destination="tQS-D9-J4h" id="1db-CF-oh4"/>
                     </connections>
                 </viewController>

@@ -14,23 +14,26 @@ class FavoriteViewController: UIViewController {
     var fetchResultsController: NSFetchedResultsController<Article>!
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyTableLabel: UILabel!
     
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        configure()
         configureFetchResultsController()
         configureTableView()
     }
     
-    private func configureTableView() {
-        let cellIdentifier = String(describing: ArticleTableViewCell.self)
-        let nib = UINib(nibName: cellIdentifier, bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: cellIdentifier)
+    // MARK: - Configure
+    private func configure() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        title = "Favorite"
     }
     
     private func configureFetchResultsController() {
         let request: NSFetchRequest<Article> = Article.fetchRequest()
-        let nameSort = NSSortDescriptor(key: "title", ascending: true)
+        let nameSort = NSSortDescriptor(key: "dateAdded", ascending: false)
         request.sortDescriptors = [nameSort]
         let context = CoreData.stack.mainContext
         fetchResultsController = NSFetchedResultsController(fetchRequest: request,
@@ -44,14 +47,28 @@ class FavoriteViewController: UIViewController {
             fatalError("Failed to initialize FetchedResultsConroller \(error)")
         }
     }
+    
+    private func configureTableView() {
+        let cellIdentifier = String(describing: ArticleTableViewCell.self)
+        let nib = UINib(nibName: cellIdentifier, bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: cellIdentifier)
+        tableView.tableFooterView = UIView()
+    }
+    
+    // MARK: - Helpers
+    private func notifyAboutRemoveArticle(with title: String) {
+        let userInfo = ["title": title] as [String: Any]
+        NotificationCenter.default.post(name: .didRemoveFromFavorite, object: nil, userInfo: userInfo)
+    }
 }
 
 // MARK: - UITableViewDataSource
 extension FavoriteViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = fetchResultsController.sections else { fatalError("No sections") }
-        let sectionInfo = sections[section]
-        return sectionInfo.numberOfObjects
+        let count = sections[section].numberOfObjects
+        emptyTableLabel.isHidden = count != 0
+        return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -71,8 +88,11 @@ extension FavoriteViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
-            let article = self?.fetchResultsController.object(at: indexPath)
-            article?.delete()
+            guard let _self = self else { return }
+            let article = _self.fetchResultsController.object(at: indexPath)
+            let title = article.title ?? ""
+            article.delete()
+            _self.notifyAboutRemoveArticle(with: title)
             completion(true)
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])

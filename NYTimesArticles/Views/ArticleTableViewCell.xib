@@ -25,34 +25,39 @@
                             <constraint firstAttribute="width" secondItem="ixz-2K-HGb" secondAttribute="height" multiplier="3:2" id="v9s-Z0-SyB"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uiR-Js-e5S">
-                        <rect key="frame" x="168.5" y="5" width="201.5" height="19"/>
-                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Title" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uiR-Js-e5S">
+                        <rect key="frame" x="168.5" y="5" width="201.5" height="19.5"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Published:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="385-l7-evu">
-                        <rect key="frame" x="168.5" y="96.5" width="56.5" height="14"/>
-                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                        <nil key="textColor"/>
+                        <rect key="frame" x="168.5" y="99" width="47" height="11.5"/>
+                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="10"/>
+                        <color key="textColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="rSG-Z1-72a">
                         <rect key="frame" x="177.5" y="48" width="20" height="20"/>
                     </activityIndicatorView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rating" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JeD-Id-pp1">
-                        <rect key="frame" x="335" y="96.5" width="35" height="14"/>
-                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="12"/>
-                        <nil key="textColor"/>
+                        <rect key="frame" x="341" y="99" width="29" height="11.5"/>
+                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="10"/>
+                        <color key="textColor" red="0.45437420685279184" green="0.45437420685279184" blue="0.45437420685279184" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="star_favorite" translatesAutoresizingMaskIntoConstraints="NO" id="gKg-go-pxw">
+                        <rect key="frame" x="345" y="72" width="20" height="19"/>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="rSG-Z1-72a" firstAttribute="centerY" secondItem="5DN-FK-fnP" secondAttribute="centerY" id="3fP-2F-qy9"/>
                     <constraint firstItem="ixz-2K-HGb" firstAttribute="top" secondItem="5DN-FK-fnP" secondAttribute="top" constant="5" id="89y-rp-mdB"/>
                     <constraint firstAttribute="bottom" secondItem="385-l7-evu" secondAttribute="bottom" constant="5" id="8bq-Hj-Xxl"/>
                     <constraint firstAttribute="trailing" secondItem="uiR-Js-e5S" secondAttribute="trailing" constant="5" id="I2m-Cf-UxT"/>
+                    <constraint firstItem="JeD-Id-pp1" firstAttribute="top" secondItem="gKg-go-pxw" secondAttribute="bottom" constant="5" id="L3O-I4-zvz"/>
                     <constraint firstItem="uiR-Js-e5S" firstAttribute="top" secondItem="ixz-2K-HGb" secondAttribute="top" id="ORE-ID-yG7"/>
+                    <constraint firstItem="gKg-go-pxw" firstAttribute="centerX" secondItem="JeD-Id-pp1" secondAttribute="centerX" id="PBR-7o-PSf"/>
                     <constraint firstItem="385-l7-evu" firstAttribute="leading" secondItem="uiR-Js-e5S" secondAttribute="leading" id="VaU-MG-KR1"/>
                     <constraint firstItem="385-l7-evu" firstAttribute="top" relation="greaterThanOrEqual" secondItem="uiR-Js-e5S" secondAttribute="bottom" constant="5" id="VdW-Ls-X64"/>
                     <constraint firstItem="JeD-Id-pp1" firstAttribute="trailing" secondItem="uiR-Js-e5S" secondAttribute="trailing" id="W88-Q2-UOV"/>
@@ -64,6 +69,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="isFavoriteImageView" destination="gKg-go-pxw" id="UDb-h0-KKf"/>
                 <outlet property="publishedLabel" destination="385-l7-evu" id="bgO-aT-9q4"/>
                 <outlet property="ratingLabel" destination="JeD-Id-pp1" id="GBY-v8-Z3g"/>
                 <outlet property="spinner" destination="rSG-Z1-72a" id="8Ga-l6-M9b"/>
@@ -73,4 +79,7 @@
             <point key="canvasLocation" x="128.80000000000001" y="85.457271364317847"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="star_favorite" width="20" height="19"/>
+    </resources>
 </document>

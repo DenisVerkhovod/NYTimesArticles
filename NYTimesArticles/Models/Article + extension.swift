@@ -55,6 +55,7 @@ extension Article {
         newArticle.emailed = self.emailed
         newArticle.shared = self.shared
         newArticle.viewed = self.viewed
+        newArticle.dateAdded = Date().timeIntervalSince1970
         LocalStorageService.shared.saveImage(fromUrl: self.thumbImageLink) { path in
             newArticle.thumbImageLocalPath = path
             self.saveChanges()
@@ -70,9 +71,22 @@ extension Article {
     }
     
     func addToFavorite() {
+        guard !isInFavorite() else { return }
         let mainContext = stack.mainContext
         self.makeCopy(in: mainContext)
         saveChanges()
+    }
+    
+    func isInFavorite() -> Bool {
+        let request: NSFetchRequest<Article> = Article.fetchRequest()
+        
+        do {
+            let results = try stack.mainContext.fetch(request)
+            return results.map{ $0.title }.contains(self.title)
+        } catch {
+            print("Couldn't perform fetch request")
+        }
+        return false
     }
     
     func delete() {
@@ -84,3 +98,4 @@ extension Article {
         stack.saveContext()
     }
 }
+
