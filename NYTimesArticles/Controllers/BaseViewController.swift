@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import SafariServices
 
 class BaseViewController: UIViewController {
     
+    // MARK: - Properties
     var feed: Feed!
     var type: FeedType {
         return .emailed
@@ -121,29 +123,29 @@ extension BaseViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let article = feed.articles?.object(at: indexPath.row) as? Article else { return }
-        article.addToFavorite()
+        tableView.deselectRow(at: indexPath, animated: false)
+        guard
+            indexPath.row < feed.articles?.count ?? 0,
+            let article = feed.articles?.object(at: indexPath.row) as? Article,
+            let urlString = article.link,
+            let url = URL(string: urlString) else { return }
+        let safariController = SFSafariViewController(url: url)
+        present(safariController, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let addToFavoriteAction = UIContextualAction(style: .normal, title: "Add To Favorite") { [weak self] _, _, completion in
-            guard let article = self?.feed.articles?.object(at: indexPath.row) as? Article else { return }
+        guard
+            indexPath.row < feed.articles?.count ?? 0,
+            let article = feed.articles?.object(at: indexPath.row) as? Article else { return nil }
+        let addToFavoriteAction = UIContextualAction(style: .normal, title: "Add To Favorite") {  _, _, completion in
             article.addToFavorite()
             completion(true)
             tableView.reloadRows(at: [indexPath], with: .automatic)
         }
+        addToFavoriteAction.backgroundColor = .green
         return UISwipeActionsConfiguration(actions: [addToFavoriteAction])
     }
-//
-//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        guard
-//            let article = feed.articles?.object(at: indexPath.row) as? Article,
-//            article.isInFavorite() else { return nil }
-//        let removeFromFavoriteAction = UIContextualAction(style: .normal, title: "Remove from favorites") { _, _, completion in
-//
-//            let request: N =
-//        }
-//    }
+    
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return []

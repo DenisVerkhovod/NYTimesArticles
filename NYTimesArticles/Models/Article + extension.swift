@@ -12,6 +12,7 @@ import CoreData
 
 extension Article {
     
+    // MARK: - Properties
     var emailedIntValue: Int? {
         let value = Int(emailed)
         return value >= 0 ? value : nil
@@ -27,6 +28,7 @@ extension Article {
         return value >= 0 ? value : nil
     }
     
+    // Factory method for create Article object
     class func create(in context: NSManagedObjectContext, from json: JSON) -> Article {
         let article = Article(context: context)
         article.title = json["title"].stringValue
@@ -41,11 +43,14 @@ extension Article {
         if let viewed = json["views"].int16 {
             article.viewed = viewed
         }
-        article.thumbImageLink = json["media"].array?.first?["media-metadata"].array?[1]["url"].string ?? ""
+        let metadataArray = json["media"].array?.first?["media-metadata"].array
+        article.thumbImageLink = metadataArray?[1]["url"].string ?? ""
+        article.imageLink = metadataArray?[2]["url"].string ?? ""
         
         return article
     }
     
+    /// create copy of Article in specified context
     @discardableResult
     private func makeCopy(in context: NSManagedObjectContext) -> Article {
         let newArticle = Article(context: context)
@@ -56,9 +61,17 @@ extension Article {
         newArticle.shared = self.shared
         newArticle.viewed = self.viewed
         newArticle.dateAdded = Date().timeIntervalSince1970
-        LocalStorageService.shared.saveImage(fromUrl: self.thumbImageLink) { path in
+        Parser.shared.text(from: self.link, completion: { [weak self] text in
+            newArticle.text = text
+            self?.saveChanges()
+        })
+        LocalStorageService.shared.saveImage(fromUrl: thumbImageLink) { [weak self] path in
             newArticle.thumbImageLocalPath = path
-            self.saveChanges()
+            self?.saveChanges()
+        }
+        LocalStorageService.shared.saveImage(fromUrl: imageLink) { [weak self] path in
+            newArticle.imageLocalPath = path
+            self?.saveChanges()
         }
         
         return newArticle

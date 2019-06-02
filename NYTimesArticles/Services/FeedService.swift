@@ -50,20 +50,21 @@ final class FeedService {
     static let shared = FeedService()
     
     private var isInProgress = false
+    
     func update(feed: Feed, by offset: Int, type: FeedType, completion: @escaping ((Feed?, FeedError?) -> Void)) {
         guard !isInProgress else { return }
+        
         isInProgress = true
         let url = Constants.baseURL.appendingPathComponent(type.description)
         
         let parameters = [Constants.offset: offset]
         
-        NetworkService.shared.request(url: url, parameters: parameters) { [weak self] result in
+        NetworkService.shared.getJson(url: url, parameters: parameters) { [weak self] result in
             switch result {
             case .success(let value):
                 self?.isInProgress = false
                 let total = value["num_results"].int ?? 0
                 feed.totalArticles = Int16(total)
-                print("total articles: \(total)")
                 feed.append(contentOf: value["results"])
                 DispatchQueue.main.async {
                     completion(feed, nil)
@@ -76,7 +77,7 @@ final class FeedService {
                         afError.responseCode == 429 {
                         completion(nil, .requestsLimit)
                     } else {
-                    completion(nil, .download)
+                        completion(nil, .download)
                     }
                 }
             }

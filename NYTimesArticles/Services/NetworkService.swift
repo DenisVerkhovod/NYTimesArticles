@@ -14,17 +14,29 @@ final class NetworkService {
     
     static let shared = NetworkService()
     
-    func request(url: URLConvertible, parameters: Parameters, completion: @escaping ((Result<JSON>) -> Void)) {
+    func getJson(url: URLConvertible, parameters: Parameters, completion: @escaping ((Result<JSON>) -> Void)) {
         let parameters = ([Constants.apiKey: Constants.key] as Parameters).merging(parameters) { first, _ in first }
         
         Alamofire.request(url, parameters: parameters)
             .validate()
             .responseJSON { response in
                 switch response.result {
-                case .success:
-                    guard let json = response.result.value else { return }
+                case let .success(json):
                     completion(.success(JSON(json)))
-                case .failure(let error):
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+        }
+    }
+    
+    func getData(url: URLConvertible, completion: @escaping ((Result<Data>) -> Void)) {
+        Alamofire.request(url)
+            .validate()
+            .responseData { response in
+                switch response.result {
+                case let .success(value):
+                    completion(.success(value))
+                case let .failure(error):
                     completion(.failure(error))
                 }
         }

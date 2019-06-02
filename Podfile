@@ -10,5 +10,6 @@ target 'NYTimesArticles' do
     pod 'Alamofire'
     pod 'AlamofireImage' 
     pod 'SwiftyJSON', '~> 4.2.0'
+    pod 'SwiftSoup'
 
 end

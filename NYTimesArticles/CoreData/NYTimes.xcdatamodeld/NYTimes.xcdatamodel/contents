@@ -3,9 +3,12 @@
     <entity name="Article" representedClassName="Article" syncable="YES" codeGenerationType="class">
         <attribute name="dateAdded" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="emailed" optional="YES" attributeType="Integer 16" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="imageLink" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageLocalPath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link" attributeType="String" syncable="YES"/>
         <attribute name="published" attributeType="String" syncable="YES"/>
         <attribute name="shared" optional="YES" attributeType="Integer 16" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbImageLink" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbImageLocalPath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" attributeType="String" syncable="YES"/>
@@ -17,7 +20,7 @@
         <relationship name="articles" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Article" inverseName="feed" inverseEntity="Article" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Article" positionX="-321.140625" positionY="-62.58203125" width="128" height="195"/>
+        <element name="Article" positionX="-321.140625" positionY="-62.58203125" width="128" height="240"/>
         <element name="Feed" positionX="-54" positionY="54" width="128" height="75"/>
     </elements>
 </model>

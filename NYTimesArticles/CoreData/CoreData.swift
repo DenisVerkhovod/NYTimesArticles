@@ -19,8 +19,9 @@ extension Storable where Self: NSManagedObject {
 
 extension NSManagedObject: Storable { }
 
-class CoreData {
+final class CoreData {
     
+    // MARK: - Stack
     private(set) static var stack = CoreData()
     
     private lazy var container: NSPersistentContainer = {
@@ -33,6 +34,7 @@ class CoreData {
         return container
     }()
     
+    // MARK: - Contexts
     lazy var mainContext: NSManagedObjectContext = {
         return container.viewContext
     }()

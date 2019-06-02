@@ -9,8 +9,9 @@
 import UIKit
 import CoreData
 
-class FavoriteViewController: UIViewController {
+final class FavoriteViewController: UIViewController {
     
+    // MARK: - Properties
     var fetchResultsController: NSFetchedResultsController<Article>!
     
     @IBOutlet weak var tableView: UITableView!
@@ -20,17 +21,18 @@ class FavoriteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configure()
+        title = "Favorite"
         configureFetchResultsController()
         configureTableView()
     }
     
-    // MARK: - Configure
-    private func configure() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         navigationController?.navigationBar.prefersLargeTitles = true
-        title = "Favorite"
     }
     
+    // MARK: - Configure
     private func configureFetchResultsController() {
         let request: NSFetchRequest<Article> = Article.fetchRequest()
         let nameSort = NSSortDescriptor(key: "dateAdded", ascending: false)
@@ -59,6 +61,15 @@ class FavoriteViewController: UIViewController {
     private func notifyAboutRemoveArticle(with title: String) {
         let userInfo = ["title": title] as [String: Any]
         NotificationCenter.default.post(name: .didRemoveFromFavorite, object: nil, userInfo: userInfo)
+    }
+    
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if
+            let detailViewController = segue.destination as? DetailViewController,
+            let article = sender as? Article {
+            detailViewController.article = article
+        }
     }
 }
 
@@ -96,6 +107,12 @@ extension FavoriteViewController: UITableViewDelegate {
             completion(true)
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        let article = fetchResultsController.object(at: indexPath)
+        performSegue(withIdentifier: "detailSegue", sender: article)
     }
 }
 

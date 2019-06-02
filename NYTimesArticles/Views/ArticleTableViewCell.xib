@@ -46,8 +46,8 @@
                         <color key="textColor" red="0.45437420685279184" green="0.45437420685279184" blue="0.45437420685279184" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="star_favorite" translatesAutoresizingMaskIntoConstraints="NO" id="gKg-go-pxw">
-                        <rect key="frame" x="345" y="72" width="20" height="19"/>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star_favorite" translatesAutoresizingMaskIntoConstraints="NO" id="gKg-go-pxw">
+                        <rect key="frame" x="345.5" y="75" width="20" height="19"/>
                     </imageView>
                 </subviews>
                 <constraints>

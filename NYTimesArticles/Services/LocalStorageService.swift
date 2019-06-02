@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LocalStorageService {
+final class LocalStorageService {
     
     static let shared = LocalStorageService()
     
@@ -37,17 +37,17 @@ class LocalStorageService {
                 completion(nil)
                 return
             }
-                do {
-                    try imageData.write(to: fileUrl)
-                    mainQueue.async {
-                        completion(fileName)
-                    }
-                } catch let error as NSError {
-                    print("error \(error.userInfo)")
-                    mainQueue.async {
-                        completion(nil)
-                    }
+            do {
+                try imageData.write(to: fileUrl)
+                mainQueue.async {
+                    completion(fileName)
                 }
+            } catch let error as NSError {
+                print("error \(error.userInfo)")
+                mainQueue.async {
+                    completion(nil)
+                }
+            }
             
         }
     }
@@ -55,7 +55,7 @@ class LocalStorageService {
     /// get image from local directory
     func image(fromFile fileName: String?, completion: @escaping ((UIImage?) -> Void)) {
         guard let imageFileName = fileName,
-              let imageUrl = imageDirectory?.appendingPathComponent(imageFileName) else {
+            let imageUrl = imageDirectory?.appendingPathComponent(imageFileName) else {
                 completion(nil)
                 return
         }

@@ -10,6 +10,7 @@ import UIKit
 
 final class ArticleTableViewCell: UITableViewCell {
     
+    // MARK: - Properties
     @IBOutlet weak var thumbImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var publishedLabel: UILabel!
@@ -23,6 +24,7 @@ final class ArticleTableViewCell: UITableViewCell {
         configure(with: nil)
     }
     
+    // MARK: - Configure
     func configure(with article: Article?) {
         if let article = article {
             titleLabel.text = article.title
