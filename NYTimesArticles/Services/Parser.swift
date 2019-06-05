@@ -28,9 +28,13 @@ final class Parser {
                     let content = String(data: value, encoding: .utf8)
                     do {
                         let doc: SwiftSoup.Document = try SwiftSoup.parse(content ?? "<html></html>")
-                        let text: String = try doc.text()
+                        let elements = try doc.select("p")
+                        var fullText = elements.compactMap({try? $0.text()})
+                        fullText.removeFirst(2)
+                        fullText.removeLast()
+
                         DispatchQueue.main.async {
-                            completion(text)
+                            completion(fullText.joined(separator: "\n"))
                         }
                     } catch {
                         print(error)
